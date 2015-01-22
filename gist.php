@@ -1,14 +1,15 @@
 <?php
-
-if (isset($_POST['button'])) 
-{    
-    $code = $_POST['code'];
+    
+    if ( !isset($_POST['content']) || $_POST['content']=="" ){
+        echo "Missing content!";
+        exit();
+    }
 
     $data = array(
-        'description' => 'description for your gist',
+        'description' => $_POST['desc'],
         'public' => 1,
         'files' => array(
-            'foo.php' => array('content' => 'sdsd'),
+            $_POST['filename'] => array('content' => $_POST['content']),
         ),
     );                               
     $data_string = json_encode($data);
@@ -17,23 +18,14 @@ if (isset($_POST['button']))
     $ch = curl_init($url);
     curl_setopt($ch, CURLOPT_POST, 1);
     curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
-
-curl_setopt($ch,CURLOPT_USERAGENT,'daconex');
-
+    curl_setopt($ch,CURLOPT_USERAGENT,'daconex');
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     $response = curl_exec($ch);
     curl_close($ch);
 
-echo $response;
     $decoded = json_decode($response, TRUE);
     $gistlink = $decoded['html_url'];
 
-    echo $gistlink;    
-}
-?>
+    echo '<a href="'.$gistlink.'">'.$gistlink.'</a>';    
 
-<form action="gist.php" method="post">
-Code: 
-<textarea name="code" cols="25" rows="10"/> </textarea>
-<input type="submit" name="button"/>
-</form>
+?>
