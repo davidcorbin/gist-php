@@ -27,5 +27,3 @@
     $gistlink = $decoded['html_url'];
 
     echo '<a href="'.$gistlink.'">'.$gistlink.'</a>';    
-
-?>
